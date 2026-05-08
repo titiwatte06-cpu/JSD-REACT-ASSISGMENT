@@ -1,7 +1,7 @@
 function UserHomeSection() {
     return(
         <div>
-            <h1 className="bg-amber-900">
+            <h1 className="bg">
                 Hello James
             </h1>
         </div>
