@@ -5,6 +5,7 @@ function Layout() {
     return (
         <div>
             <Navbar />   {/* ← อยู่ทุกหน้า */}
+            <hr></hr>
             <Outlet />   {/* ← เปลี่ยนตาม path */}
         </div>
     )
