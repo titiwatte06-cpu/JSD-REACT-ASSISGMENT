@@ -57,16 +57,16 @@ function Hero() {
                     }}
                     
                 >
-                    {showUserTable ? "ซ่อน User" : "User Home Section"}
+                    UserHome Section
                 </button>
                 <button 
                     className="bg-gray-200 p-3 rounded"
                     onClick={() => {
                         setShowAdminTable(!showAdminTable) 
-                    setHome(!showUserTable ? "React - Assesments" : "Home-Admin Section")}
+                    setHome(!showUserTable ? "React - Assesments" : "Admin-Home Section")}
                         }
                 >
-                    {showAdminTable ? "ซ่อน Admin" : "Admin Home Section"}
+                    Admin Home Section
                 </button>
             </div>
 
