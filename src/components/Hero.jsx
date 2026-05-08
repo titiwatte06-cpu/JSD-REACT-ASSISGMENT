@@ -1,28 +1,35 @@
 import { useNavigate } from "react-router"
-import { useState } from 'react'
+import { useState , useEffect} from 'react'
+
 
 function Hero() {
     let navigate = useNavigate()
     const [showUserTable, setShowUserTable] = useState(false)
     const [showAdminTable, setShowAdminTable] = useState(false)
 
-    const [data,setData] = fetch('https://67eca027aa794fb3222e43e2.mockapi.io/members')
-        .then(res => res.json)
-        .then(data => console.log(data))
+    const [data, setData] = useState([])  // เริ่มต้นเป็น array ว่าง
 
-    // const [data, setData] = useState([
-    //     { id: 1, name: "Tay", age: 25 },
-    //     { id: 2, name: "John", age: 30 },
-    // ])
+    useEffect(() => {
+        fetch('https://67eca027aa794fb3222e43e2.mockapi.io/members')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data) 
+                setData(data)})
+                  // เก็บข้อมูลลง state
+    }, [])  // รันแค่ครั้งเดียวตอนเปิดหน้า
+
+    
     const [newName, setNewName] = useState("")
     const [newAge, setNewAge] = useState("")
+    const [newPosition, setNewPosition] = useState("")
     const [home,setHome] = useState("React - Assesments")
 
     const handleAdd = () => {
-        if (!newName || !newAge) return
-        setData([...data, { id: data.length + 1, name: newName, age: Number(newAge) }])
+        if (!newName || !newAge || !newPosition) return
+        setData([...data, { id: data.length + 1, name: newName, lastname: newAge , position:newPosition }])
         setNewName("")
         setNewAge("")
+        setNewPosition("")
     }
 
     const handleDelete = (id) => {
@@ -80,9 +87,17 @@ function Hero() {
                             <input
                                 value={newAge}
                                 onChange={(e) => setNewAge(e.target.value)}
-                                placeholder="อายุ"
+                                placeholder="นามสกุล"
                                 className="border p-2 rounded"
                             />
+
+                            <input
+                                value={newPosition}
+                                onChange={(e) => setNewPosition(e.target.value)}
+                                placeholder="ตำแหน่ง"
+                                className="border p-2 rounded"
+                            />
+
                             <button 
                                 onClick={handleAdd} 
                                 className="bg-green-400 p-2 text-white rounded"
@@ -96,8 +111,9 @@ function Hero() {
                         <thead>
                             <tr className="bg-gray-400">
                                 <th className="p-2 border">ID</th>
-                                <th className="p-2 border">ชื่อ</th>
-                                <th className="p-2 border">อายุ</th>
+                                <th className="p-2 border">ชื่อจริง</th>
+                                <th className="p-2 border">นาสกุล</th>
+                                <th className="p-2 border">ตำแหน่ง</th>
                                 {showAdminTable && (
                                     <th className="p-2 border">จัดการ</th>
                                 )}
@@ -108,7 +124,8 @@ function Hero() {
                                 <tr key={item.id}>
                                     <td className="p-2 border text-center">{item.id}</td>
                                     <td className="p-2 border text-center">{item.name}</td>
-                                    <td className="p-2 border text-center">{item.age}</td>
+                                    <td className="p-2 border text-center">{item.lastname}</td>
+                                    <td className="p-2 border text-center">{item.position}</td>
                                     {showAdminTable && (
                                         <td className="p-2 border text-center">
                                             <button
