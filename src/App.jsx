@@ -3,9 +3,9 @@ import { useState } from 'react'
 import Hero from './components/Hero'
 
 import './App.css'  
+import Layout from './components/Layout'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>

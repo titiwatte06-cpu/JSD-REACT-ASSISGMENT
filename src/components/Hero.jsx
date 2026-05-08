@@ -1,143 +1,132 @@
-
 import { useNavigate } from "react-router"
 import { useState } from 'react'
 
 function Hero() {
     let navigate = useNavigate()
     const [showUserTable, setShowUserTable] = useState(false)
-    const [showTable, setShowTable] = useState(false)
-    const [data, setData] = useState([
-        { id: 1, name: "Tay", age: 25 },
-        { id: 2, name: "John", age: 30 },
-    ])
-    const [showForm, setShowForm] = useState(false)
+    const [showAdminTable, setShowAdminTable] = useState(false)
+
+    const [data,setData] = fetch('https://67eca027aa794fb3222e43e2.mockapi.io/members')
+        .then(res => res.json)
+        .then(data => console.log(data))
+
+    // const [data, setData] = useState([
+    //     { id: 1, name: "Tay", age: 25 },
+    //     { id: 2, name: "John", age: 30 },
+    // ])
     const [newName, setNewName] = useState("")
     const [newAge, setNewAge] = useState("")
-    const [editId, setEditId] = useState(null)
-    const [editName, setEditName] = useState("")
-    const [editAge, setEditAge] = useState("")
+    const [home,setHome] = useState("React - Assesments")
 
     const handleAdd = () => {
         if (!newName || !newAge) return
         setData([...data, { id: data.length + 1, name: newName, age: Number(newAge) }])
         setNewName("")
         setNewAge("")
-        setShowForm(false)
     }
 
     const handleDelete = (id) => {
-        setData(data.filter((item) => item.id !== id))
-    }
-
-    const handleEdit = (item) => {
-        setEditId(item.id)
-        setEditName(item.name)
-        setEditAge(item.age)
-    }
-
-    const handleSaveEdit = () => {
-        setData(data.map((item) =>
-            item.id === editId
-                ? { ...item, name: editName, age: Number(editAge) }
-                : item
-        ))
-        setEditId(null)
+    const filtered = data.filter((item) => item.id !== id)  // ลบออก
+    const reordered = filtered.map((item, index) => ({      // เรียง id ใหม่
+        ...item,
+        id: index + 1
+    }))
+    setData(reordered)
     }
 
     return (
-        <div className="bg-gray-300 text-black h-auto">
-            <h1>Generation Thailand<br/>React Assesments</h1>
+        <div className="bg-gray-300 text-black h-auto min-h-screen p-10">
+            <h1 className="text-4xl font-bold text-center mb-8">
+                Generation Thailand<br/>{home}
+            </h1>
 
-            <div className="flex items-center justify-center gap-40">
-                <button className="bg-gray-200 p-3" onClick={() => setShowUserTable(!showUserTable)}>
-                    User Home Section
+            {/* ปุ่ม */}
+            <div className="flex items-center justify-center gap-10 mb-8">
+                <button 
+                    className="bg-gray-200 p-3 rounded"
+                    onClick={() => {
+                        setShowUserTable(!showUserTable)
+                    setHome(!showUserTable ? "User-Home Section" : "React - Assesments")
+                    }}
+                    
+                >
+                    {showUserTable ? "ซ่อน User" : "User Home Section"}
                 </button>
-                <button className="bg-gray-200 p-3" onClick={() => setShowTable(!showTable)}>
-                    {showTable ? "ซ่อนตาราง" : "Admin"}
+                <button 
+                    className="bg-gray-200 p-3 rounded"
+                    onClick={() => {
+                        setShowAdminTable(!showAdminTable) 
+                    setHome(!showUserTable ? "React - Assesments" : "Home-Admin Section")}
+                        }
+                >
+                    {showAdminTable ? "ซ่อน Admin" : "Admin Home Section"}
                 </button>
             </div>
 
+            {/* ตาราง */}
             {showUserTable && (
-                <div className="mt-4 flex flex-col items-center">
-                    <h2 className="text-xl font-bold mb-2">User Home Section</h2>
-                    <table className="border">
-                        <thead>
-                            <tr className="bg-gray-400">
-                                <th className="p-2 border">ID</th>
-                                <th className="p-2 border">ชื่อ</th>
-                                <th className="p-2 border">อายุ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((item) => (
-                                <tr key={item.id}>
-                                    <td className="p-2 border">{item.id}</td>
-                                    <td className="p-2 border">{item.name}</td>
-                                    <td className="p-2 border">{item.age}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                <div className="flex flex-col items-center">
+                    <h2 className="text-xl font-bold mb-4">User Home Section</h2>
 
-            {showTable && (
-                <div className="mt-4 flex flex-col items-center">
-                    <button 
-                        onClick={() => setShowForm(!showForm)}
-                        className="bg-green-400 p-2 mb-2 text-white"
-                    >
-                        + เพิ่มสมาชิก
-                    </button>
-
-                    {showForm && (
+                    {/* form เพิ่มข้อมูล — แสดงเฉพาะตอน Admin เปิด */}
+                    {showAdminTable && (
                         <div className="flex gap-2 mb-4">
-                            <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="ชื่อ" className="border p-2"/>
-                            <input value={newAge} onChange={(e) => setNewAge(e.target.value)} placeholder="อายุ" className="border p-2"/>
-                            <button onClick={handleAdd} className="bg-blue-400 p-2 text-white">บันทึก</button>
+                            <input
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                                placeholder="ชื่อ"
+                                className="border p-2 rounded"
+                            />
+                            <input
+                                value={newAge}
+                                onChange={(e) => setNewAge(e.target.value)}
+                                placeholder="อายุ"
+                                className="border p-2 rounded"
+                            />
+                            <button 
+                                onClick={handleAdd} 
+                                className="bg-green-400 p-2 text-white rounded"
+                            >
+                                + เพิ่มสมาชิก
+                            </button>
                         </div>
                     )}
 
-                    <table className="border">
+                    <table className="border w-full max-w-lg">
                         <thead>
                             <tr className="bg-gray-400">
                                 <th className="p-2 border">ID</th>
                                 <th className="p-2 border">ชื่อ</th>
                                 <th className="p-2 border">อายุ</th>
-                                <th className="p-2 border">จัดการ</th>
+                                {showAdminTable && (
+                                    <th className="p-2 border">จัดการ</th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((item) => (
                                 <tr key={item.id}>
-                                    <td className="p-2 border">{item.id}</td>
-                                    <td className="p-2 border">
-                                        {editId === item.id
-                                            ? <input value={editName} onChange={(e) => setEditName(e.target.value)} className="border p-1"/>
-                                            : item.name
-                                        }
-                                    </td>
-                                    <td className="p-2 border">
-                                        {editId === item.id
-                                            ? <input value={editAge} onChange={(e) => setEditAge(e.target.value)} className="border p-1"/>
-                                            : item.age
-                                        }
-                                    </td>
-                                    <td className="p-2 border flex gap-2">
-                                        {editId === item.id
-                                            ? <button onClick={handleSaveEdit} className="bg-blue-400 p-1 text-white">บันทึก</button>
-                                            : <button onClick={() => handleEdit(item)} className="bg-yellow-400 p-1">แก้ไข</button>
-                                        }
-                                        <button onClick={() => handleDelete(item.id)} className="bg-red-400 p-1 text-white">ลบ</button>
-                                    </td>
+                                    <td className="p-2 border text-center">{item.id}</td>
+                                    <td className="p-2 border text-center">{item.name}</td>
+                                    <td className="p-2 border text-center">{item.age}</td>
+                                    {showAdminTable && (
+                                        <td className="p-2 border text-center">
+                                            <button
+                                                onClick={() => handleDelete(item.id)}
+                                                className="bg-red-400 px-2 py-1 text-white rounded"
+                                            >
+                                                ลบ
+                                            </button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
             )}
-        </div>  
-    )          
+        </div>
+    )
 }
 
 export default Hero
