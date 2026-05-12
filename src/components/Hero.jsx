@@ -10,7 +10,7 @@ function Hero() {
     const [data, setData] = useState([])  // เริ่มต้นเป็น array ว่าง
 
     useEffect(() => {
-        fetch('https://67eca027aa794fb3222e43e2.mockapi.io/members')
+        fetch('http://localhost:3000/members')
             .then(res => res.json())
             .then(data => {
                 console.log(data) 
